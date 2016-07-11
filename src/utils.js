@@ -2,14 +2,14 @@ function payload(model, state) {
   return {
     id: model.id,
     state: state,
-    data: model
+    data: model.toJSON()
   };
 }
 
 function payloadCollection(collection, state, error) {
   return {
     state: state,
-    data: collection.items.map(function(model) {
+    data: collection.models.map(function(model) {
       return payload(model, state);
     }),
     error: error || {}

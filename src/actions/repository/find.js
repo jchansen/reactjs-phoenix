@@ -1,33 +1,35 @@
-var $ = require('jquery');
 var PayloadStates = require('../../constants/PayloadStates');
 var ActionTypes = require('../../constants/ActionTypes');
+var RepositoryCollection = require('../../collections/Repository');
 var payloadCollection = require('../../utils').payloadCollection;
 
 module.exports = function fetchAll() {
   return function (dispatch) {
-    $.ajax({
-      method: 'GET',
-      url: 'https://api.github.com/search/repositories',
+    var repositories = new RepositoryCollection();
+
+    repositories.fetch({
       data: {
         q: 'stars:>1000',
         sort: 'stars',
         per_page: 10
       }
-    }).then(function(data, textStatus, xhr) {
+    }).then(function () {
       dispatch({
         type: ActionTypes.FETCH_REPOSITORIES,
-        payload: payloadCollection(data, PayloadStates.RESOLVED)
+        payload: payloadCollection(repositories, PayloadStates.RESOLVED)
       });
-    }).fail(function(xhr, textStatus, error){
+    }).fail(function(response) {
+      var error = response.responseJSON;
+
       dispatch({
         type: ActionTypes.FETCH_REPOSITORIES,
-        payload: payloadCollection({items: []}, PayloadStates.ERROR_FETCHING, error)
+        payload: payloadCollection(repositories, PayloadStates.ERROR_FETCHING, error)
       });
     });
 
     return dispatch({
       type: ActionTypes.FETCH_REPOSITORIES,
-      payload: payloadCollection({items: []}, PayloadStates.FETCHING)
+      payload: payloadCollection(repositories, PayloadStates.FETCHING)
     });
   };
 };

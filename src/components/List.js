@@ -32,8 +32,9 @@ module.exports = React.createClass({
   },
 
   getInitialState: function() {
+    var store = this.context.store;
     return {
-      repositories: payloadCollection({items: []}, PayloadStates.FETCHING)
+      repositories: store.getState().repository.find
     };
   },
 
@@ -53,10 +54,8 @@ module.exports = React.createClass({
 
   handleChange: function() {
     var store = this.context.store;
-    var storeState = store.getState();
-    var repositories = storeState.repository.find;
     this.setState({
-      repositories: repositories
+      repositories: store.getState().repository.find
     });
   },
 
