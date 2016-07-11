@@ -14,7 +14,7 @@ module.exports = React.createClass({
 
   render: function() {
     var repository = this.props.repository;
-    var description = repository.description;
+    var description = repository.data.description;
     var styles = this.getStyles();
     var tokens = [];
 
@@ -28,14 +28,14 @@ module.exports = React.createClass({
     return (
       <li key={repository.id} className="media">
         <div className="media-left">
-          <a href={repository.html_url}>
-            <img className="media-object" src={repository.owner.avatar_url} style={styles.image}/>
+          <a href={repository.data.html_url}>
+            <img className="media-object" src={repository.data.owner.avatar_url} style={styles.image}/>
           </a>
         </div>
         <div className="media-body">
           <h4 className="media-heading">
-            <span className="badge pull-right">{repository.stargazers_count}</span>
-            {repository.name}
+            <span className="badge pull-right">{repository.data.stargazers_count}</span>
+            {repository.data.name}
           </h4>
           {description}
         </div>

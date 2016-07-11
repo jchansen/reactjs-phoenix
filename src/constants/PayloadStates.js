@@ -1,0 +1,5 @@
+module.exports = {
+  RESOLVED: 'RESOLVED',
+  FETCHING: 'FETCHING',
+  ERROR_FETCHING: 'ERROR_FETCHING'
+};

@@ -2,6 +2,8 @@ var React = require('react');
 var $ = require('jquery');
 var Header = require('./Header');
 var Repository = require('./Repository');
+var PayloadStates = require('../constants/PayloadStates');
+var payloadCollection = require('../utils').payloadCollection;
 
 module.exports = React.createClass({
   displayName: 'List',
@@ -26,8 +28,7 @@ module.exports = React.createClass({
 
   getInitialState: function() {
     return {
-      repositories: null,
-      error: null
+      repositories: payloadCollection({items: []}, PayloadStates.FETCHING)
     };
   },
 
@@ -42,11 +43,11 @@ module.exports = React.createClass({
       }
     }).then(function(data, textStatus, xhr) {
       this.setState({
-        repositories: data.items
+        repositories: payloadCollection(data, PayloadStates.RESOLVED)
       });
     }.bind(this)).fail(function(xhr, textStatus, error){
       this.setState({
-        error: error
+        repositories: payloadCollection([], PayloadStates.ERROR_FETCHING, error)
       });
     }.bind(this));
   },
@@ -59,11 +60,10 @@ module.exports = React.createClass({
 
   render: function() {
     var repositories = this.state.repositories;
-    var error = this.state.error;
     var styles = this.getStyles();
     var body = null;
 
-    if (error) {
+    if (repositories.state === PayloadStates.ERROR_FETCHING) {
       body = (
         <h2 style={styles.loading}>
           BOOM! Sad face.
@@ -71,16 +71,18 @@ module.exports = React.createClass({
       );
     }
 
-    if (!repositories) {
+    if (repositories.state === PayloadStates.FETCHING) {
       body = (
         <h2 style={styles.loading}>
           Loading...
         </h2>
       );
-    } else {
+    }
+
+    if (repositories.state === PayloadStates.RESOLVED) {
       body = (
         <ul className="media-list" style={styles.repositories}>
-          {repositories.map(this.renderRepository)}
+          {repositories.data.map(this.renderRepository)}
         </ul>
       );
     }
