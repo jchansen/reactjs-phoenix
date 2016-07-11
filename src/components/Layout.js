@@ -6,7 +6,7 @@
 
 var React = require('react');
 var Header = require('./Header');
-var List = require('../containers/List');
+var List = require('./List');
 
 module.exports = React.createClass({
   displayName: 'Layout',
