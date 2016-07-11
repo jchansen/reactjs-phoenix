@@ -1,13 +1,13 @@
 var React = require('react');
-var Header = require('./Header');
 var Repository = require('./Repository');
 var PayloadStates = require('../constants/PayloadStates');
-var payloadCollection = require('../utils').payloadCollection;
-var bindActionCreators = require('redux').bindActionCreators;
-var actions = require('../actions');
 
 module.exports = React.createClass({
   displayName: 'List',
+
+  propTypes: {
+    repositories: React.PropTypes.object.isRequired
+  },
 
   getStyles: function() {
     return {
@@ -27,38 +27,6 @@ module.exports = React.createClass({
     }
   },
 
-  contextTypes: {
-    store: React.PropTypes.object.isRequired
-  },
-
-  getInitialState: function() {
-    var store = this.context.store;
-    return {
-      repositories: store.getState().repository.find
-    };
-  },
-
-  componentDidMount: function() {
-    var store = this.context.store;
-
-    // save unsubscribe method to use on unmount
-    this.unsubscribe = store.subscribe(this.handleChange);
-
-    // bind action to the dispatch method and invoke it
-    bindActionCreators(actions.repository.find, store.dispatch)();
-  },
-
-  componentWillUnmount: function() {
-    this.unsubscribe();
-  },
-
-  handleChange: function() {
-    var store = this.context.store;
-    this.setState({
-      repositories: store.getState().repository.find
-    });
-  },
-
   renderRepository: function(repository) {
     return (
       <Repository key={repository.id} repository={repository} />
@@ -66,7 +34,7 @@ module.exports = React.createClass({
   },
 
   render: function() {
-    var repositories = this.state.repositories;
+    var repositories = this.props.repositories;
     var styles = this.getStyles();
     var body = null;
 
