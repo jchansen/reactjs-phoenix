@@ -1,9 +1,10 @@
 var React = require('react');
-var $ = require('jquery');
 var Header = require('./Header');
 var Repository = require('./Repository');
 var PayloadStates = require('../constants/PayloadStates');
 var payloadCollection = require('../utils').payloadCollection;
+var bindActionCreators = require('redux').bindActionCreators;
+var actions = require('../actions');
 
 module.exports = React.createClass({
   displayName: 'List',
@@ -26,6 +27,10 @@ module.exports = React.createClass({
     }
   },
 
+  contextTypes: {
+    store: React.PropTypes.object.isRequired
+  },
+
   getInitialState: function() {
     return {
       repositories: payloadCollection({items: []}, PayloadStates.FETCHING)
@@ -33,23 +38,26 @@ module.exports = React.createClass({
   },
 
   componentDidMount: function() {
-    $.ajax({
-      method: 'GET',
-      url: 'https://api.github.com/search/repositories',
-      data: {
-        q: 'stars:>1000',
-        sort: 'stars',
-        per_page: 10
-      }
-    }).then(function(data, textStatus, xhr) {
-      this.setState({
-        repositories: payloadCollection(data, PayloadStates.RESOLVED)
-      });
-    }.bind(this)).fail(function(xhr, textStatus, error){
-      this.setState({
-        repositories: payloadCollection([], PayloadStates.ERROR_FETCHING, error)
-      });
-    }.bind(this));
+    var store = this.context.store;
+
+    // save unsubscribe method to use on unmount
+    this.unsubscribe = store.subscribe(this.handleChange);
+
+    // bind action to the dispatch method and invoke it
+    bindActionCreators(actions.repository.find, store.dispatch)();
+  },
+
+  componentWillUnmount: function() {
+    this.unsubscribe();
+  },
+
+  handleChange: function() {
+    var store = this.context.store;
+    var storeState = store.getState();
+    var repositories = storeState.repository.find;
+    this.setState({
+      repositories: repositories
+    });
   },
 
   renderRepository: function(repository) {

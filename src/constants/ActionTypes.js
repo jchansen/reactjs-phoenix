@@ -1,0 +1,3 @@
+module.exports = {
+  FETCH_REPOSITORIES: 'FETCH_REPOSITORIES'
+};
