@@ -2,9 +2,9 @@
 
 This is the example app shown at the Phoenix ReactJS meetup and used to demonstrate architecture patterns for:
 
-1. data-driven components
-2. server communication
-3. declarative components
+1. server communication
+2. declarative components
+3. data-driven components
 
 ## Intended Use
 
@@ -76,7 +76,7 @@ render: function() {
 ```
 
 ### 2. data-driven
-This step refactors `start` by wrapping the data recieved from the server in a structure that allows it to be expressive and clear.
+This step refactors `start` by wrapping the data recieved from the server in a structure that allows it to be expressive and clear. We do this so that our components can become data-driven, meaning they know exactly what to do with the data based off nothing more that the `data.state` property. The components will know if they data is being fetched, updated, if there was an error updating, if the data couldn't be found, and could also be easily extended to provide custom states beyond the standard CRUD states (for example taking into account very specific API errors like rate limits, authorization, etc.)
 
 ```jsx
 componentDidMount: function() {
@@ -142,7 +142,7 @@ render: function() {
 ```
 
 ### 3. server-communication-jquery
-This steps refactors the application to use Redux.
+This steps refactors the application to use Redux. The jQuery code that fetches data from GitHub's API is moved into the Action, while the data that converts that result into state is moved into the Reducer.
 
 ```jsx
 // List.js
@@ -241,7 +241,7 @@ module.exports = function find(state, action) {
 ```
 
 ### 4. server-communication-backbone
-This step refactors the `repository.find` action to use Backbone instead of jQuery. We do this to create an abstraction tier that solves for specific REST API concerns, and provides a change to manipulate the data before it's sent to the server or recieved from the server.
+This step refactors the `repository.find` action to use Backbone instead of jQuery. We do this to create an abstraction tier that solves for specific REST API concerns (making it easier to interact with them), and provides us with a changce to manipulate the data before it's sent to the server or recieved from the server, and standarize all primary key fields under a single "id" paramter (regardless of whether they're called _id, id, username, etc. within the API itself).
 
 ```js
 var PayloadStates = require('../../constants/PayloadStates');
@@ -282,7 +282,7 @@ module.exports = function fetchAll() {
 ```
 
 ### 5. declaration-containers
-This step breaks apart the component into a `List` component and a `ListContainer` component, and separates _what_ data the component needs with _how_ it gets that data. This improves testability, but for this example, it's a step towards allowing components to declare what data they need.
+This step breaks apart the component into a `List` component and a `ListContainer` component, and separates _what_ data the component needs with _how_ it gets that data. This improves testability, and also provides a step towards allowing components to declare what data they need.
 
 ```jsx
 // src/components/List.js
@@ -373,3 +373,5 @@ React.createClass({
 );
 ```
 
+### 7. final version w/ pagination
+The final version of this examples lives at https://github.com/lore/lore/tree/master/examples/pagination. It continues to build on these patterns, introducing conventions, and ultimately removing the need to define actions or reducers at all. It also extends the `connect` behavior to introduce support for querying and pagination.
