@@ -10,6 +10,8 @@ This is the example app shown at the Phoenix ReactJS meetup and used to demonstr
 
 The branches in this repo represent a gradual refactor of the demo app. Going through the steps in order will likely be the easiest way to understand how the application progresses, and each step is a single conceptual change to the application.
 
+The most relevant changes or code for each branch will be pasted below so that you don't neccesarily _have_ to flip through the branches to recall the major changes.
+
 ### 1. start
 This branch starts off the demo, and uses the `componentDidMount` method in the `List` component to fetch data from the GitHub API and set the state of the component. The `render` function then looks at the component's state to determine what to render.
 
