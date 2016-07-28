@@ -6,7 +6,7 @@ This is the example app shown at the Phoenix ReactJS meetup and used to demonstr
 2. declarative components
 3. data-driven components
 
-## Intended Use
+# How to Use This Repo
 
 The branches in this repo represent a gradual refactor of the demo app. Going through the steps in order will likely be the easiest way to understand how the application progresses, and each step is a single conceptual change to the application.
 
