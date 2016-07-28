@@ -12,7 +12,7 @@ The branches in this repo represent a gradual refactor of the demo app. Going th
 
 The most relevant changes or code for each branch will be pasted below so that you don't neccesarily _have_ to flip through the branches to recall the major changes.
 
-### 1. start
+## 1. start
 This branch starts off the demo, and uses the `componentDidMount` method in the `List` component to fetch data from the GitHub API and set the state of the component. The `render` function then looks at the component's state to determine what to render.
 
 ```jsx
@@ -77,7 +77,7 @@ render: function() {
 
 ```
 
-### 2. data-driven
+## 2. data-driven
 This step refactors `start` by wrapping the data recieved from the server in a structure that allows it to be expressive and clear. We do this so that our components can become data-driven, meaning they know exactly what to do with the data based off nothing more that the `data.state` property. The components will know if they data is being fetched, updated, if there was an error updating, if the data couldn't be found, and could also be easily extended to provide custom states beyond the standard CRUD states (for example taking into account very specific API errors like rate limits, authorization, etc.)
 
 ```jsx
@@ -143,7 +143,7 @@ render: function() {
 }
 ```
 
-### 3. server-communication-jquery
+## 3. server-communication-jquery
 This steps refactors the application to use Redux. The jQuery code that fetches data from GitHub's API is moved into the Action, while the data that converts that result into state is moved into the Reducer.
 
 ```jsx
@@ -242,7 +242,7 @@ module.exports = function find(state, action) {
 };
 ```
 
-### 4. server-communication-backbone
+## 4. server-communication-backbone
 This step refactors the `repository.find` action to use Backbone instead of jQuery. We do this to create an abstraction tier that solves for specific REST API concerns (making it easier to interact with them), and provides us with a changce to manipulate the data before it's sent to the server or recieved from the server, and standarize all primary key fields under a single "id" paramter (regardless of whether they're called _id, id, username, etc. within the API itself).
 
 ```js
@@ -283,7 +283,7 @@ module.exports = function fetchAll() {
 };
 ```
 
-### 5. declaration-containers
+## 5. declaration-containers
 This step breaks apart the component into a `List` component and a `ListContainer` component, and separates _what_ data the component needs with _how_ it gets that data. This improves testability, and also provides a step towards allowing components to declare what data they need.
 
 ```jsx
@@ -351,7 +351,7 @@ module.exports = React.createClass({
 });
 ```
 
-### 6. declaration-connect
+## 6. declaration-connect
 This step refactors the container to something more generic (called `connect`) that can be reused by any component and allows them to declare what data they want.
 
 ```jsx
@@ -375,5 +375,5 @@ React.createClass({
 );
 ```
 
-### 7. final version w/ pagination
+## 7. final version w/ pagination
 The final version of this examples lives at https://github.com/lore/lore/tree/master/examples/pagination. It continues to build on these patterns, introducing conventions, and ultimately removing the need to define actions or reducers at all. It also extends the `connect` behavior to introduce support for querying and pagination.
